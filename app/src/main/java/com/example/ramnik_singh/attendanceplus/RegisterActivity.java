@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private EditText editTextEmail,editTextPassword,editTextPassword1;
     private Button buttonRegister;
+    private TextView textViewLogin;
     private FirebaseAuth mAuth;
     private ProgressBar progressbar;
 
@@ -31,14 +33,20 @@ public class RegisterActivity extends AppCompatActivity {
         editTextPassword=(EditText) findViewById(R.id.editTextPassword);
         editTextPassword1=(EditText) findViewById(R.id.editTextPassword1);
         buttonRegister=(Button)findViewById(R.id.buttonRegister);
+        textViewLogin=(TextView)findViewById(R.id.textViewLogin);
         progressbar=(ProgressBar)findViewById(R.id.progressbar);
         mAuth = FirebaseAuth.getInstance();
         buttonRegister.setOnClickListener(new View.OnClickListener(){
             public void onClick(View v) {
                 registerUser();
-                //Intent intent = new Intent(v.getContext(), RegisterActivity.class);
-                //v.getContext().startActivity(intent);
-                //startActivity(new Intent(this,MainActivity.class));
+
+            }
+        });
+        textViewLogin.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
+                startActivity(new Intent(RegisterActivity.this,MainActivity.class));
             }
         });
 
@@ -88,7 +96,7 @@ public class RegisterActivity extends AppCompatActivity {
                 if(task.isSuccessful()){
                     Toast.makeText(getApplicationContext(),"User Registered Successfully",Toast.LENGTH_SHORT).show();
                     finish();
-                    startActivity(new Intent(RegisterActivity.this,ProfileActivity.class));
+                    startActivity(new Intent(RegisterActivity.this,StudentProfileActivity.class));
 
                 }
                 else

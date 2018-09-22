@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -18,7 +19,7 @@ import com.google.firebase.auth.FirebaseAuth;
 
 public class MainActivity extends AppCompatActivity {
 
-    private Button buttonRegister1;
+    private TextView textViewRegister1;
     private Button buttonLogin1;
     private EditText editTextEmail1,editTextPassword1;
     FirebaseAuth mAuth;
@@ -28,14 +29,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        buttonRegister1=(Button) findViewById(R.id.buttonRegister1);
+        textViewRegister1=(TextView) findViewById(R.id.textViewRegister1);
         buttonLogin1=(Button) findViewById(R.id.buttonLogin1);
 
         editTextEmail1=(EditText) findViewById(R.id.editTextEmail1);
         editTextPassword1=(EditText) findViewById(R.id.editTextPassword1);
         mAuth=FirebaseAuth.getInstance();
         progressbar1=(ProgressBar)findViewById(R.id.progressbar1);
-        buttonRegister1.setOnClickListener(new View.OnClickListener() {
+        textViewRegister1.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
                 finish();
                 Intent intent = new Intent(v.getContext(), RegisterActivity.class);
@@ -56,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
         super.onStart();
         if(mAuth.getCurrentUser()!=null){
             finish();
-            startActivity(new Intent(this,ProfileActivity.class));
+            startActivity(new Intent(this,StudentDashboard.class));
         }
     }
 
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
                 progressbar1.setVisibility(View.GONE);
                 if(task.isSuccessful()){
                     finish();
-                    Intent intent=new Intent(MainActivity.this,ProfileActivity.class);
+                    Intent intent=new Intent(MainActivity.this,StudentDashboard.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                     startActivity(intent);
 
