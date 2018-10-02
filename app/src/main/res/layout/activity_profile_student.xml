@@ -21,58 +21,97 @@
             android:background="@color/colorPrimary">
         </android.support.v7.widget.Toolbar>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Tap on camera to choose profile picture"
-            android:textAlignment="center"
-            android:textAppearance="@style/Base.TextAppearance.AppCompat.Medium"/>
-
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Tap on camera to choose profile picture"
+                android:textAlignment="center"
+                android:paddingTop="10dp"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Small" />
 
             <ImageView
+                android:id="@+id/imageView"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
-                android:id="@+id/imageView"
+                android:layout_centerHorizontal="true"
                 android:layout_margin="20dp"
                 android:background="@drawable/icon_camera"
                 android:scaleType="centerCrop"
-                android:layout_centerHorizontal="true"/>
+                android:paddingTop="40dp" />
 
             <ProgressBar
                 android:id="@+id/progressbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_centerHorizontal="true"
-                android:visibility="gone"/>
+                android:layout_centerVertical="true"
+                android:visibility="gone" />
+
         </RelativeLayout>
 
-        <EditText
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/editTextDisplayName"
-            android:hint="Enter Display Name"/>
+            android:layout_height="match_parent">
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="25dp"
-            android:id="@+id/buttonSave"
-            android:paddingLeft="55dp"
-            android:paddingRight="55dp"
-            android:text="Save"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp">
 
+                <EditText
+                    android:id="@+id/editTextDisplayName"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Name" />
 
-        <TextView
-            android:id="@+id/textviewVerified"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingTop="20dp"
-            android:text="Verified" />
+                <EditText
+                    android:id="@+id/editTextSID"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="SID"
+                    android:paddingTop="30dp"/>
+
+                <EditText
+                    android:id="@+id/editTextBranch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Branch"
+                    android:paddingTop="30dp"
+                    />
+
+                <EditText
+                    android:id="@+id/editTextSemester"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Semester"
+                    android:paddingTop="30dp" />
+
+                <TextView
+                    android:id="@+id/textviewVerified"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="30dp"
+                    android:text="Verified" />
+
+                <Button
+                    android:id="@+id/buttonSave"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:gravity="center"
+                    android:paddingLeft="55dp"
+                    android:paddingRight="55dp"
+                    android:text="Save" />
+
+            </LinearLayout>
+        </ScrollView>
+
 
     </LinearLayout>
 

@@ -26,31 +26,56 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 
+class User{
+    String id;
+    int roleId;
+    String Name;
+    String SID;
+    String Branch;
+    String Semester;
+
+    public User(int roleId, String Name, String SID, String Branch, String Semester){
+        this.roleId = roleId;
+        this.Name = Name;
+        this.SID=SID;
+        this.Branch=Branch;
+        this.Semester=Semester;
+    }
+}
 public class StudentProfileActivity extends AppCompatActivity {
 
     private static final int CHOOSE_IMAGE = 101;
     private TextView textView;
     ImageView imageView;
-    EditText editText;
+    EditText editTextDisplayName,editTextSID,editTextBranch,editTextSemester;
     FirebaseAuth mAuth;
     Uri uriProfileImage;
     ProgressBar progressBar;
     String profileImageUrl;
+
+    private DatabaseReference mDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_student);
         textView=findViewById(R.id.textviewVerified);
-        editText=findViewById(R.id.editTextDisplayName);
+        editTextDisplayName=findViewById(R.id.editTextDisplayName);
+        editTextSID=findViewById(R.id.editTextSID);
+        editTextBranch=findViewById(R.id.editTextBranch);
+        editTextSemester=findViewById(R.id.editTextSemester);
         imageView=findViewById(R.id.imageView);
         progressBar=findViewById(R.id.progressbar);
+
+        mDatabase= FirebaseDatabase.getInstance().getReference();
 
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -139,10 +164,13 @@ public class StudentProfileActivity extends AppCompatActivity {
     }
 
     private void saveUserInformation(){
-        String displayName=editText.getText().toString();
+        String displayName=editTextDisplayName.getText().toString();
+        String SID=editTextSID.getText().toString();
+        String Branch=editTextBranch.getText().toString();
+        String Semester=editTextSemester.getText().toString();
         if(displayName.isEmpty()){
-            editText.setError("Name Required");
-            editText.requestFocus();
+            editTextDisplayName.setError("Name Required");
+            editTextDisplayName.requestFocus();
             return;
         }
         FirebaseUser user=mAuth.getCurrentUser();
@@ -150,15 +178,30 @@ public class StudentProfileActivity extends AppCompatActivity {
         if(user!=null && profileImageUrl!=null) {
             UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder().setDisplayName(displayName).setPhotoUri(Uri.parse(profileImageUrl)).build();
 
-
             user.updateProfile(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(StudentProfileActivity.this, "Profile Updated",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(StudentProfileActivity.this, "Profile Picture Updated",Toast.LENGTH_SHORT).show();
 
                 }
             });
         }
+
+        User u=new User(1,displayName,SID,Branch,Semester);
+        u.id=FirebaseAuth.getInstance().getCurrentUser().getUid();
+
+        FirebaseDatabase.getInstance().getReference().child("users").child(u.id).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
+            @Override
+            public void onComplete(@NonNull Task<Void> task) {
+                if(task.isSuccessful()){
+                    Toast.makeText(StudentProfileActivity.this, "Profile Updated",Toast.LENGTH_SHORT).show();
+                }
+                else{
+                    String msg=task.getException().toString();
+                    Toast.makeText(StudentProfileActivity.this, msg,Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 

@@ -1,20 +1,37 @@
 package com.example.ramnik_singh.attendanceplus;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.MultiFormatWriter;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
 
 public class StudentDashboard extends AppCompatActivity {
 
     FirebaseAuth mAuth;
-
+    Button generateButton;
+    ImageView image;
+    String text2Qr;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +40,56 @@ public class StudentDashboard extends AppCompatActivity {
         setSupportActionBar(toolbar);
         mAuth= FirebaseAuth.getInstance();
         final FirebaseUser user=mAuth.getCurrentUser();
+        final String u=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        Log.d("tag","value of u "+u);
+
+        FirebaseDatabase.getInstance()
+                .getReference()
+                .child("users")
+                .addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(DataSnapshot dataSnapshot) {
+
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()){
+                            String id=snapshot.child("id").getValue().toString();
+                            Log.d("tag","value of id "+ id);// this is your user
+                            if(id.equals(u)){
+                                text2Qr=snapshot.child("SID").getValue().toString();
+                                Log.d("tag","Matched "+ id);
+                                // add to list
+                            }
+                        }
+                        // Now may be display all user in listview
+                    }
+
+                    @Override
+                    public void onCancelled(DatabaseError databaseError) {
+
+                    }
+                });
+
+        //Log.d("tag","value of text2qr "+text2Qr);
+        //System.out.print(text2Qr);
+
+        generateButton = findViewById(R.id.generateButton);
+        image = findViewById(R.id.image);
+        generateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("tag","value of text2qr "+ text2Qr);
+                MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
+                try{
+                    BitMatrix bitMatrix = multiFormatWriter.encode(text2Qr, BarcodeFormat.QR_CODE,200,200);
+
+                    BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+                    Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
+                    image.setImageBitmap(bitmap);
+                }
+                catch (WriterException e){
+                   e.printStackTrace();
+                }
+            }
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
