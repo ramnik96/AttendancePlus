@@ -18,7 +18,8 @@
         </activity>
         <activity android:name=".RegisterActivity" />
         <activity android:name=".StudentProfileActivity" />
-        <activity android:name=".StudentDashboard"></activity>
+        <activity android:name=".StudentDashboard" />
+        <activity android:name=".TeacherDashboard"></activity>
     </application>
 
 </manifest>
