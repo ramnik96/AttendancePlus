@@ -1,9 +1,6 @@
 package com.example.ramnik_singh.attendanceplus;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -11,28 +8,22 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.MediaController;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.support.v7.widget.Toolbar;
 
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
-
-import java.io.IOException;
 
 class User{
     String id;
@@ -50,17 +41,17 @@ class User{
         this.Semester=Semester;
     }
 }
-public class StudentProfileActivity extends AppCompatActivity {
+public class StudentProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
-    private static final int CHOOSE_IMAGE = 101;
+    //private static final int CHOOSE_IMAGE = 101;
     private TextView textView;
-    ImageView imageView;
-    EditText editTextDisplayName,editTextSID,editTextBranch,editTextSemester;
+    //ImageView imageView;
+    EditText editTextDisplayName,editTextSID,editTextSemester;
     FirebaseAuth mAuth;
-    Uri uriProfileImage;
+    //Uri uriProfileImage;
     ProgressBar progressBar;
-    String profileImageUrl;
-
+    //String profileImageUrl;
+    String selectedbranch,selectedsemester;
     private DatabaseReference mDatabase;
 
     @Override
@@ -70,19 +61,24 @@ public class StudentProfileActivity extends AppCompatActivity {
         textView=findViewById(R.id.textviewVerified);
         editTextDisplayName=findViewById(R.id.editTextDisplayName);
         editTextSID=findViewById(R.id.editTextSID);
-        editTextBranch=findViewById(R.id.editTextBranch);
-        editTextSemester=findViewById(R.id.editTextSemester);
-        imageView=findViewById(R.id.imageView);
-        progressBar=findViewById(R.id.progressbar);
-
+        Spinner spinner=findViewById(R.id.spinner1);
+        Spinner spinner2=findViewById(R.id.spinner2);
+        ArrayAdapter<CharSequence> adapter=ArrayAdapter.createFromResource(this,R.array.branches,android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter2=ArrayAdapter.createFromResource(this,R.array.semester,android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner.setAdapter(adapter);
+        spinner2.setAdapter(adapter2);
+        spinner.setOnItemSelectedListener(this);
+        spinner2.setOnItemSelectedListener(this);
         mDatabase= FirebaseDatabase.getInstance().getReference();
 
-        imageView.setOnClickListener(new View.OnClickListener() {
+        /*imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 showImageChooser();
             }
-        });
+        });*/
 
         findViewById(R.id.buttonSave).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,7 +98,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                 textView.setText("Email Verified");
             }
             else{
-                textView.setText("Email NOT Verified (Click to Verify)");
+                textView.setText("Email NOT Verified (Click HERE to Verify)");
                 textView.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -124,9 +120,7 @@ public class StudentProfileActivity extends AppCompatActivity {
 
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu_profile,menu);
-
         return true;
-
     }
 
     @Override
@@ -141,13 +135,11 @@ public class StudentProfileActivity extends AppCompatActivity {
                 finish();
                 startActivity(new Intent(this,StudentDashboard.class));
                 break;
-
         }
-
         return true;
     }
 
-    @Override
+    /*@Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode==CHOOSE_IMAGE && resultCode==RESULT_OK && data!=null && data.getData()!=null){
@@ -161,13 +153,14 @@ public class StudentProfileActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     private void saveUserInformation(){
         String displayName=editTextDisplayName.getText().toString();
         String SID=editTextSID.getText().toString();
-        String Branch=editTextBranch.getText().toString();
-        String Semester=editTextSemester.getText().toString();
+
+        String Branch= selectedbranch;
+        String Semester=selectedsemester;
         if(displayName.isEmpty()){
             editTextDisplayName.setError("Name Required");
             editTextDisplayName.requestFocus();
@@ -175,14 +168,12 @@ public class StudentProfileActivity extends AppCompatActivity {
         }
         FirebaseUser user=mAuth.getCurrentUser();
 
-        if(user!=null && profileImageUrl!=null) {
-            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder().setDisplayName(displayName).setPhotoUri(Uri.parse(profileImageUrl)).build();
-
+        if(user!=null) {
+            UserProfileChangeRequest profile = new UserProfileChangeRequest.Builder().setDisplayName(displayName).build();
             user.updateProfile(profile).addOnCompleteListener(new OnCompleteListener<Void>() {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
-                    Toast.makeText(StudentProfileActivity.this, "Profile Picture Updated",Toast.LENGTH_SHORT).show();
-
+                    Toast.makeText(StudentProfileActivity.this, "Profile Updated",Toast.LENGTH_SHORT).show();
                 }
             });
         }
@@ -195,6 +186,9 @@ public class StudentProfileActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
                     Toast.makeText(StudentProfileActivity.this, "Profile Updated",Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(new Intent(getBaseContext(),StudentDashboard.class));
+
                 }
                 else{
                     String msg=task.getException().toString();
@@ -205,7 +199,7 @@ public class StudentProfileActivity extends AppCompatActivity {
     }
 
 
-    private void uploadImagetoFirebaseStorage() {
+    /*private void uploadImagetoFirebaseStorage() {
         StorageReference profileImageRef= FirebaseStorage.getInstance().getReference("profilepics/"+System.currentTimeMillis()+".jpg");
         if(uriProfileImage != null){
             progressBar.setVisibility(View.VISIBLE);
@@ -232,5 +226,19 @@ public class StudentProfileActivity extends AppCompatActivity {
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent,"Select Profile Image"),CHOOSE_IMAGE);
     }
+*/
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if(adapterView.getId()==R.id.spinner1) {
+            selectedbranch = adapterView.getItemAtPosition(i).toString();
+        }
+        else if(adapterView.getId()==R.id.spinner2){
+            selectedsemester = adapterView.getItemAtPosition(i).toString();
+        }
+    }
 
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
 }

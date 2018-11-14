@@ -12,12 +12,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.zxing.BarcodeFormat;
@@ -32,6 +33,7 @@ public class StudentDashboard extends AppCompatActivity {
     Button generateButton;
     ImageView image;
     String text2Qr;
+    private ProgressBar progressbar2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +44,8 @@ public class StudentDashboard extends AppCompatActivity {
         final FirebaseUser user=mAuth.getCurrentUser();
         final String u=FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d("tag","value of u "+u);
-
+        progressbar2=(ProgressBar)findViewById(R.id.progressbar2);
+        progressbar2.setVisibility(View.VISIBLE);
         FirebaseDatabase.getInstance()
                 .getReference()
                 .child("users")
@@ -54,19 +57,21 @@ public class StudentDashboard extends AppCompatActivity {
                             String id=snapshot.child("id").getValue().toString();
                             Log.d("tag","value of id "+ id);// this is your user
                             if(id.equals(u)){
-                                text2Qr=snapshot.child("SID").getValue().toString();
+                                String text2Qr1=snapshot.child("SID").getValue().toString();
+                                String text2Qr2=snapshot.child("Name").getValue().toString();
+                                text2Qr=text2Qr1+"_"+text2Qr2;
+                                //Toast.makeText(StudentDashboard.this, text2Qr,Toast.LENGTH_SHORT).show();
                                 Log.d("tag","Matched "+ id);
                                 // add to list
                             }
                         }
                         // Now may be display all user in listview
                     }
-
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
-
                     }
                 });
+        progressbar2.setVisibility(View.GONE);
 
         //Log.d("tag","value of text2qr "+text2Qr);
         //System.out.print(text2Qr);
@@ -76,11 +81,11 @@ public class StudentDashboard extends AppCompatActivity {
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Toast.makeText(StudentDashboard.this,"Scan this code to mark your attendance!",Toast.LENGTH_SHORT).show();
                 Log.d("tag","value of text2qr "+ text2Qr);
                 MultiFormatWriter multiFormatWriter = new MultiFormatWriter();
                 try{
                     BitMatrix bitMatrix = multiFormatWriter.encode(text2Qr, BarcodeFormat.QR_CODE,200,200);
-
                     BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
                     Bitmap bitmap = barcodeEncoder.createBitmap(bitMatrix);
                     image.setImageBitmap(bitmap);
@@ -93,12 +98,9 @@ public class StudentDashboard extends AppCompatActivity {
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-
         MenuInflater inflater=getMenuInflater();
         inflater.inflate(R.menu.menu_dashboard,menu);
-
         return true;
-
     }
 
     @Override
@@ -111,7 +113,6 @@ public class StudentDashboard extends AppCompatActivity {
                 break;
 
             case R.id.menuProfile:
-                finish();
                 startActivity(new Intent(this,StudentProfileActivity.class));
                 break;
         }

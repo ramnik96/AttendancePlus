@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
@@ -18,10 +17,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,17 +25,17 @@ public class MainActivity extends AppCompatActivity {
     private EditText editTextEmail1,editTextPassword1;
     FirebaseAuth mAuth;
     private ProgressBar progressbar1;
-    String text_roleid;
+    //String text_roleid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ImageView homeimage=findViewById(R.id.homeimage);
+        //ImageView homeimage=findViewById(R.id.homeimage);
         ImageView homeheading=findViewById(R.id.homeheading);
-        int imageResource=getResources().getIdentifier("@drawable/homelogo",null,this.getPackageName());
-        int imageResource1=getResources().getIdentifier("@drawable/headingfinal",null,this.getPackageName());
-        homeimage.setImageResource(imageResource);
+        //int imageResource=getResources().getIdentifier("@drawable/homelogo",null,this.getPackageName());
+        int imageResource1=getResources().getIdentifier("@drawable/slide1",null,this.getPackageName());
+        //homeimage.setImageResource(imageResource);
         homeheading.setImageResource(imageResource1);
         textViewRegister1=(TextView) findViewById(R.id.textViewRegister1);
         buttonLogin1=(Button) findViewById(R.id.buttonLogin1);
