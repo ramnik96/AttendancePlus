@@ -1,4 +1,4 @@
-package com.example.ramnik_singh.attendanceplus;
+package com.example.ramnik_singh.attendanceplus_student;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -156,8 +156,8 @@ public class StudentProfileActivity extends AppCompatActivity implements Adapter
     }*/
 
     private void saveUserInformation(){
-        String displayName=editTextDisplayName.getText().toString();
-        String SID=editTextSID.getText().toString();
+        String displayName=editTextDisplayName.getText().toString().trim();
+        String SID=editTextSID.getText().toString().trim();
 
         String Branch= selectedbranch;
         String Semester=selectedsemester;
@@ -236,9 +236,7 @@ public class StudentProfileActivity extends AppCompatActivity implements Adapter
             selectedsemester = adapterView.getItemAtPosition(i).toString();
         }
     }
-
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 }

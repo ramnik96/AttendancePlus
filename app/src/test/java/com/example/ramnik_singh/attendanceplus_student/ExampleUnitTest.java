@@ -1,4 +1,4 @@
-package com.example.ramnik_singh.attendanceplus;
+package com.example.ramnik_singh.attendanceplus_student;
 
 import org.junit.Test;
 

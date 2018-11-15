@@ -1,4 +1,4 @@
-package com.example.ramnik_singh.attendanceplus;
+package com.example.ramnik_singh.attendanceplus_student;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -44,6 +44,8 @@ public class StudentDashboard extends AppCompatActivity {
         final FirebaseUser user=mAuth.getCurrentUser();
         final String u=FirebaseAuth.getInstance().getCurrentUser().getUid();
         Log.d("tag","value of u "+u);
+        generateButton = findViewById(R.id.generateButton);
+        generateButton.setEnabled(false);
         progressbar2=(ProgressBar)findViewById(R.id.progressbar2);
         progressbar2.setVisibility(View.VISIBLE);
         FirebaseDatabase.getInstance()
@@ -57,9 +59,11 @@ public class StudentDashboard extends AppCompatActivity {
                             String id=snapshot.child("id").getValue().toString();
                             Log.d("tag","value of id "+ id);// this is your user
                             if(id.equals(u)){
-                                String text2Qr1=snapshot.child("SID").getValue().toString();
-                                String text2Qr2=snapshot.child("Name").getValue().toString();
+                                String text2Qr1=snapshot.child("SID").getValue().toString().trim();
+                                String text2Qr2=snapshot.child("Name").getValue().toString().trim();
                                 text2Qr=text2Qr1+"_"+text2Qr2;
+                                progressbar2.setVisibility(View.GONE);
+                                generateButton.setEnabled(true);
                                 //Toast.makeText(StudentDashboard.this, text2Qr,Toast.LENGTH_SHORT).show();
                                 Log.d("tag","Matched "+ id);
                                 // add to list
@@ -69,14 +73,15 @@ public class StudentDashboard extends AppCompatActivity {
                     }
                     @Override
                     public void onCancelled(DatabaseError databaseError) {
+                        Toast.makeText(StudentDashboard.this,"Error: Try again!",Toast.LENGTH_SHORT).show();
                     }
                 });
-        progressbar2.setVisibility(View.GONE);
+
 
         //Log.d("tag","value of text2qr "+text2Qr);
         //System.out.print(text2Qr);
 
-        generateButton = findViewById(R.id.generateButton);
+
         image = findViewById(R.id.image);
         generateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,6 +97,7 @@ public class StudentDashboard extends AppCompatActivity {
                 }
                 catch (WriterException e){
                    e.printStackTrace();
+                    Toast.makeText(StudentDashboard.this,"Error: Try again!",Toast.LENGTH_SHORT).show();
                 }
             }
         });

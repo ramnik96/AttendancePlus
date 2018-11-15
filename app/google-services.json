@@ -10,7 +10,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:430958557663:android:84ea6950317641a6",
         "android_client_info": {
-          "package_name": "com.example.ramnik_singh.attendanceplus"
+          "package_name": "com.example.ramnik_singh.attendanceplus_student"
         }
       },
       "oauth_client": [
@@ -18,7 +18,7 @@
           "client_id": "430958557663-9e1ni56fteop8klf648208jpj9b0rvgf.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ramnik_singh.attendanceplus",
+            "package_name": "com.example.ramnik_singh.attendanceplus_student",
             "certificate_hash": "984702708a053ee1e8345ba72db845685d52a4c5"
           }
         },
@@ -26,7 +26,7 @@
           "client_id": "430958557663-8oq2jl4lild8f8m98v3qj95eeobhc27r.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.ramnik_singh.attendanceplus",
+            "package_name": "com.example.ramnik_singh.attendanceplus_student",
             "certificate_hash": "e6bf7573453cf0339c366acf12098efe808d808a"
           }
         },

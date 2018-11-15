@@ -1,4 +1,4 @@
-package com.example.ramnik_singh.attendanceplus;
+package com.example.ramnik_singh.attendanceplus_student;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -49,9 +49,6 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(new Intent(RegisterActivity.this,MainActivity.class));
             }
         });
-
-
-
     }
 
     private void registerUser() {
@@ -106,10 +103,5 @@ public class RegisterActivity extends AppCompatActivity {
                 }
             }
         });
-
-
     }
-
-
-
 }
