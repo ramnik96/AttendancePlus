@@ -61,7 +61,7 @@ public class StudentDashboard extends AppCompatActivity {
                             if(id.equals(u)){
                                 String text2Qr1=snapshot.child("SID").getValue().toString().trim();
                                 String text2Qr2=snapshot.child("Name").getValue().toString().trim();
-                                text2Qr=text2Qr1+"_"+text2Qr2;
+                                text2Qr=text2Qr1+"|"+text2Qr2;
                                 progressbar2.setVisibility(View.GONE);
                                 generateButton.setEnabled(true);
                                 //Toast.makeText(StudentDashboard.this, text2Qr,Toast.LENGTH_SHORT).show();
