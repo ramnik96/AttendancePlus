@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,23 +26,9 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-class User{
-    String id;
-    int roleId;
-    String Name;
-    String SID;
-    String Branch;
-    String Semester;
+import java.io.Serializable;
 
-    public User(int roleId, String Name, String SID, String Branch, String Semester){
-        this.roleId = roleId;
-        this.Name = Name;
-        this.SID=SID;
-        this.Branch=Branch;
-        this.Semester=Semester;
-    }
-}
-public class StudentProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class StudentProfileActivity extends AppCompatActivity implements AdapterView.OnItemSelectedListener,Serializable {
 
     //private static final int CHOOSE_IMAGE = 101;
     private TextView textView;
@@ -161,6 +148,7 @@ public class StudentProfileActivity extends AppCompatActivity implements Adapter
 
         String Branch= selectedbranch;
         String Semester=selectedsemester;
+        Log.d("PROFILE",displayName+" "+SID+" "+Branch+" "+Semester);
         if(displayName.isEmpty()){
             editTextDisplayName.setError("Name Required");
             editTextDisplayName.requestFocus();
@@ -177,11 +165,13 @@ public class StudentProfileActivity extends AppCompatActivity implements Adapter
                 }
             });
         }
+        String uid=FirebaseAuth.getInstance().getCurrentUser().getUid();
+        User u=new User(uid,displayName,SID,Branch,Semester);
+        Log.d("PROFILE",uid+" "+displayName+" "+SID+" "+Branch+" "+Semester);
+        Log.d("PROFILE",u.toString());
 
-        User u=new User(1,displayName,SID,Branch,Semester);
-        u.id=FirebaseAuth.getInstance().getCurrentUser().getUid();
 
-        FirebaseDatabase.getInstance().getReference().child("users").child(u.id).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
+        FirebaseDatabase.getInstance().getReference().child("users").child(uid).setValue(u).addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
             public void onComplete(@NonNull Task<Void> task) {
                 if(task.isSuccessful()){
@@ -193,6 +183,7 @@ public class StudentProfileActivity extends AppCompatActivity implements Adapter
                 else{
                     String msg=task.getException().toString();
                     Toast.makeText(StudentProfileActivity.this, msg,Toast.LENGTH_SHORT).show();
+                    Log.d("PROFILE","Error"+msg);
                 }
             }
         });

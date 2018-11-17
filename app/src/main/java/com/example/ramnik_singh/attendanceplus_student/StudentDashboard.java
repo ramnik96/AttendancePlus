@@ -2,6 +2,7 @@ package com.example.ramnik_singh.attendanceplus_student;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.support.annotation.Keep;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -27,13 +28,56 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-public class StudentDashboard extends AppCompatActivity {
+import java.io.Serializable;
+@Keep
+public class StudentDashboard extends AppCompatActivity implements Serializable{
 
-    FirebaseAuth mAuth;
-    Button generateButton;
-    ImageView image;
-    String text2Qr;
-    private ProgressBar progressbar2;
+    public FirebaseAuth mAuth;
+    public Button generateButton;
+    public ImageView image;
+    public String text2Qr;
+    public ProgressBar progressbar2;
+
+    public StudentDashboard(FirebaseAuth mAuth, Button generateButton, ImageView image, String text2Qr, ProgressBar progressbar2) {
+        this.mAuth = mAuth;
+        this.generateButton = generateButton;
+        this.image = image;
+        this.text2Qr = text2Qr;
+        this.progressbar2 = progressbar2;
+    }
+
+    public StudentDashboard(FirebaseAuth mAuth, Button generateButton) {
+        this.mAuth = mAuth;
+        this.generateButton = generateButton;
+    }
+
+    public Button getGenerateButton() {
+        return generateButton;
+    }
+
+    public ImageView getImage() {
+        return image;
+    }
+
+    public String getText2Qr() {
+        return text2Qr;
+    }
+
+    public ProgressBar getProgressbar2() {
+        return progressbar2;
+    }
+
+    public StudentDashboard() {
+    }
+
+    public FirebaseAuth getmAuth() {
+        return mAuth;
+    }
+
+    public StudentDashboard(FirebaseAuth mAuth) {
+        this.mAuth = mAuth;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,7 +100,7 @@ public class StudentDashboard extends AppCompatActivity {
                     public void onDataChange(DataSnapshot dataSnapshot) {
 
                         for (DataSnapshot snapshot : dataSnapshot.getChildren()){
-                            String id=snapshot.child("id").getValue().toString();
+                                String id=snapshot.child("id").getValue().toString();
                             Log.d("tag","value of id "+ id);// this is your user
                             if(id.equals(u)){
                                 String text2Qr1=snapshot.child("SID").getValue().toString().trim();
